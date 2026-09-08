@@ -16,12 +16,5 @@ while (is_start):
         case 2:
             collection.append('task')
             print(collection)
-        case '3':
-            for key, item in enumerate(collection):
-                print(key + 1 , item)
-            selection = int(input("Введите номер задачи для редактирования"))
-            edit_name = input("Укажите новое имя задачи")
-            collection[select_edit -1] = edit_name
-            
-
+        case _:
             print("Такого пункта нет!")
