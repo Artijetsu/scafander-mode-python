@@ -1,32 +1,71 @@
 import tkinter as tk
+from functools import partial
 
-score = 0
+window = tk.Tk()
+window.title("Калькулятор")
+window.geometry("300x300")
 
-def start():
-    global score
-    score += 1
-    label.config(text=str(score))
+entry = tk.Entry(window, justify="right")
+entry.pack(fill="x", padx=10, pady=10)
 
-root = tk.Tk()
+def click(button):
+    if button == "=":
+        calculate()
+    elif button == "C":
+        clear()
+    else:
+        entry.insert(tk.END, button)
 
-root.geometry("500x500")
-root.iconbitmap("../assets/icon.ico")
+def clear():
+    entry.delete(0, tk.END)
 
-header = tk.Frame(root,bg="red", height=100, width=400)
-header.pack(side="top", fill="x")
+def calculate():
+    try:
+        result = eval(entry.get())
+        entry.delete(0, tk.END)
+        entry.insert(0, result)
+    except:
+        entry.delete(0, tk.END)
+        entry.insert(0, "Ошибка")
 
-footer = tk.Frame(root,bg="red", height=100, width=400)
-header.pack(side="bottom", fill="x")
+frame = tk.Frame(window)
+frame.pack()
 
-main = tk.Frame(root,bg="blue", height=100, width=400)
-main.pack(side="bottom", fill="x")
+buttons = [
+    "7", "8", "9", "/",
+    "4", "5", "6", "*",
+    "1", "2", "3", "-",
+    "0", ".", "=", "+"
+]
 
-button_start = tk.Button(main, text="Старт Движуха", command=start)
-button_start.pack()
+for i in range(len(buttons)):
+    row = i // 4
+    column = i % 4
 
-label = tk.Label(main, text=0, height=1, width=100)
-label.pack()
+    button = tk.Button(
+        frame,
+        text=buttons[i],
+        width=5,
+        height=2,
+        command=partial(click, buttons[i])
+    )
 
+    button.grid(row=row, column=column, padx=5, pady=5)
 
+clear_button = tk.Button(
+    frame,
+    text="C",
+    width=23,
+    height=2,
+    command=partial(click, "C")
+)
 
-root.mainloop()
+clear_button.grid(
+    row=4,
+    column=0,
+    columnspan=4,
+    padx=5,
+    pady=5
+)
+
+window.mainloop()
