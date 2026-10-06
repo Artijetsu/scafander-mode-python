@@ -42,30 +42,12 @@ for i in range(len(buttons)):
     row = i // 4
     column = i % 4
 
-    button = tk.Button(
-        frame,
-        text=buttons[i],
-        width=5,
-        height=2,
-        command=partial(click, buttons[i])
-    )
+    button = tk.Button(frame,text=buttons[i],width=5,height=2,command=partial(click, buttons[i]))
 
     button.grid(row=row, column=column, padx=5, pady=5)
 
-clear_button = tk.Button(
-    frame,
-    text="C",
-    width=23,
-    height=2,
-    command=partial(click, "C")
-)
+clear_button = tk.Button(frame,text="C",width=23,height=2,command=partial(click, "C"))
 
-clear_button.grid(
-    row=4,
-    column=0,
-    columnspan=4,
-    padx=5,
-    pady=5
-)
+clear_button.grid(row=4,column=0,columnspan=4,padx=5,pady=5)
 
 window.mainloop()
