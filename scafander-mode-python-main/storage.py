@@ -1,4 +1,4 @@
-"""Загрузка и сохранение задач в JSON."""
+"""Загрузка и сохранение задач в JSON"""
 import json
 from pathlib import Path
 
