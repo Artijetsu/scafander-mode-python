@@ -1,41 +1,42 @@
-"""Графический интерфейс приложения Task Manager"""
-
+"""Графический интерфейс приложения Task Manager."""
 import tkinter as tk
 from tkinter import messagebox, simpledialog
 
+from AppButton import AppButton
+from AppLabel import AppLabel
+from AppListbox import AppListbox
+
 
 class Interface:
-    """Создает главное окно и элементы управления приложения"""
+    """Главное окно и элементы управления."""
 
     def __init__(self, collection, on_save):
         self.root = tk.Tk()
         self.root.title("Task Manager")
-        self.root.geometry("600x400")
-        self.root.minsize(400, 300)
+        self.root.geometry("600x420")
+        self.root.minsize(420, 300)
         self.collection = collection
         self.on_save = on_save
 
-        self.root.configure(padx=12, pady=12)
-        self.listbox = tk.Listbox(self.root, height=14)
+        AppLabel(self.root, text="Мои задачи", font=("Arial", 14, "bold")).pack(pady=(0, 8))
+        self.listbox = AppListbox(self.root, height=14)
         self.listbox.pack(fill=tk.BOTH, expand=True)
 
         buttons = tk.Frame(self.root)
         buttons.pack(fill=tk.X, pady=(10, 0))
-        tk.Button(buttons, text="Добавить", command=self.add_task).pack(side=tk.LEFT, padx=3)
-        tk.Button(buttons, text="Изменить", command=self.edit_task).pack(side=tk.LEFT, padx=3)
-        tk.Button(buttons, text="Удалить", command=self.delete_task).pack(side=tk.LEFT, padx=3)
-        self.refresh()
+        AppButton(buttons, "Добавить", self.add_task).pack(side=tk.LEFT, padx=3)
+        AppButton(buttons, "Изменить", self.edit_task).pack(side=tk.LEFT, padx=3)
+        AppButton(buttons, "Удалить", self.delete_task).pack(side=tk.LEFT, padx=3)
+        self.show_tasks()
 
-    def refresh(self):
-        self.listbox.delete(0, tk.END)
-        for item in self.collection:
-            name, _, content = item.strip().partition("|")
-            self.listbox.insert(tk.END, f"{name.strip()} - {content.strip()}")
+    def show_tasks(self):
+        """Показывает актуальный список задач."""
+        self.listbox.show_tasks(self.collection)
 
     def selected_index(self):
         selection = self.listbox.curselection()
         if not selection:
-            messagebox.showinfo("Task Manager", "Выберите задачу из списка.")
+            messagebox.showinfo("Task Manager", "Выберите задачу из списка.", parent=self.root)
             return None
         return selection[0]
 
@@ -47,28 +48,28 @@ class Interface:
         if content is None:
             return
         if not name.strip() or not content.strip():
-            messagebox.showwarning("Task Manager", "Название и содержание не должны быть пустыми.")
+            messagebox.showwarning("Task Manager", "Название и содержание не должны быть пустыми.", parent=self.root)
             return
-        self.collection.append(f"{name.strip()} | {content.strip()}\n")
-        self.refresh()
+        self.collection.append({"name": name.strip(), "content": content.strip()})
+        self.show_tasks()
         self.on_save()
 
     def edit_task(self):
         index = self.selected_index()
         if index is None:
             return
-        name, _, content = self.collection[index].strip().partition("|")
-        new_name = simpledialog.askstring("Изменить задачу", "Название:", initialvalue=name.strip(), parent=self.root)
+        task = self.collection[index]
+        new_name = simpledialog.askstring("Изменить задачу", "Название:", initialvalue=task.get("name", ""), parent=self.root)
         if new_name is None:
             return
-        new_content = simpledialog.askstring("Изменить задачу", "Содержание:", initialvalue=content.strip(), parent=self.root)
+        new_content = simpledialog.askstring("Изменить задачу", "Содержание:", initialvalue=task.get("content", ""), parent=self.root)
         if new_content is None:
             return
         if not new_name.strip() or not new_content.strip():
-            messagebox.showwarning("Task Manager", "Название и содержание не должны быть пустыми.")
+            messagebox.showwarning("Task Manager", "Название и содержание не должны быть пустыми.", parent=self.root)
             return
-        self.collection[index] = f"{new_name.strip()} | {new_content.strip()}\n"
-        self.refresh()
+        self.collection[index] = {"name": new_name.strip(), "content": new_content.strip()}
+        self.show_tasks()
         self.on_save()
 
     def delete_task(self):
@@ -77,7 +78,7 @@ class Interface:
             return
         if messagebox.askyesno("Удалить задачу", "Удалить выбранную задачу?", parent=self.root):
             self.collection.pop(index)
-            self.refresh()
+            self.show_tasks()
             self.on_save()
 
     def run(self):

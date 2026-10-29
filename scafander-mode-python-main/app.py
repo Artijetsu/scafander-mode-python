@@ -1,6 +1,5 @@
-"""Основное приложение Task Manager"""
-
-from storage_file import load_tasks, save_tasks
+"""Основное приложение Task Manager."""
+from storage import load_tasks, save_tasks
 from config import NAME_FILE_SAVES
 from utils import insure_saves_file
 from interface import Interface

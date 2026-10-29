@@ -1,27 +1,20 @@
-"""
-                              === Функции для просмотра и показа задач ===
+"""Функции отображения задач в консольной версии."""
 
-                                    === Версия приложения: 0.1.8 ===
-"""
-
-### Показ списка задач
 def show_collection(task_collection):
     print("=" * 45)
     if not task_collection:
         print("Список задач пуст!")
     else:
-        for number, content in enumerate(task_collection):
-            parts = content.strip().split("|", 1)
-            task_name = parts[0].strip()
-            if len(parts) > 1:
-                task_content = parts[1].strip()
+        for number, task in enumerate(task_collection, start=1):
+            if isinstance(task, dict):
+                name = task.get("name", "")
+                content = task.get("content", "")
             else:
-                task_content = ""
-            print(f"{number + 1}. {task_name}")
-            print(f"   Содержание: {task_content}")
+                name, _, content = task.strip().partition("|")
+            print(f"{number}. {name.strip()}\n   Содержание: {content.strip()}")
     print("=" * 45)
 
-### Показ меню приложения
+
 def show_menu():
     print("1 - Показать задачи")
     print("2 - Добавить задачу")
