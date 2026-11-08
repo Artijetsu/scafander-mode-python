@@ -52,7 +52,7 @@ PythonCourse/
 1. Скачайте или клонируйте репозиторий:
 
 ```bash
-git clone <ссылка-на-репозиторий>
+git clone https://github.com/Artijetsu/scafander-mode-python
 ```
 
 2. Перейдите в папку проекта:
